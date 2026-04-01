@@ -19,9 +19,44 @@
         {{ form_row(form.town) }}
         {{ form_row(form.postcode) }}
         {{ form_row(form.memberCategory) }}
+
+        <img id="gold" src="{{ asset('gold.png') }}" alt="Gold member badge">
+        <img id="silver" src="{{ asset('silver.png') }}" alt="Silver member badge">
+        <img id="bronze" src="{{ asset('bronze.png') }}" alt="Bronze member badge">
         <hr>
 
         <h2>Account information</h2>
         {{ form_end(form) }}
     </div>
+
+    <style>
+        @scope {
+            #gold, #silver, #bronze {
+                width: 100px;
+                display: none;
+            }
+
+            #register_memberCategory{
+                & option[value="0"] {
+                    background: gold;
+                    color: black;
+                }
+                & option[value="1"] {
+                    background: silver;
+                    color: black;
+                }
+                & option[value="2"] {
+                    background: sienna;
+                }
+            }
+
+            /* Show the correct badge when the corresponding option is selected. */
+            /* Uses :has if supported by the browser. */
+            div:has(#register_memberCategory option[value="0"]:checked) #gold,
+            div:has(#register_memberCategory option[value="1"]:checked) #silver,
+            div:has(#register_memberCategory option[value="2"]:checked) #bronze {
+                display: block;
+            }
+        }
+    </style>
 {% endblock %}
