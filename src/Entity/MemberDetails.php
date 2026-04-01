@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Form\Type\MemberCategory;
+use App\MemberCategory;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /*

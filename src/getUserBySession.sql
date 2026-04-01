@@ -1,6 +1,12 @@
 SELECT
 	u.id,
 	u.created,
+	u.forename,
+	u.surname,
+	u.street,
+	u.town,
+	u.postcode,
+	u.category,
 	u.password,
 	u.email,
 	(

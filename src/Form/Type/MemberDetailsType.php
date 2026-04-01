@@ -2,16 +2,11 @@
 
 namespace App\Form\Type;
 
+use App\MemberCategory;
 use App\Entity\MemberDetails;
 use Symfony\Component\Form\Extension\Core\Type\{EnumType, TextType};
 use Symfony\Component\Form\{AbstractType, FormBuilderInterface};
 use Symfony\Component\OptionsResolver\OptionsResolver;
-enum MemberCategory
-{
-	case Gold;
-	case Silver;
-	case Bronze;
-}
 
 final class MemberDetailsType extends AbstractType
 {

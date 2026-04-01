@@ -1,7 +1,16 @@
 -- Use RETURNING to get the inserted row in a single query (works on SQLite 3.35+)
 INSERT INTO
-	user (email, password)
+	user (
+		forename,
+		surname,
+		street,
+		town,
+		postcode,
+		category,
+		email,
+		password
+	)
 VALUES
-	(?, ?) RETURNING id,
+	(?, ?, ?, ?, ?, ?, ?, ?) RETURNING id,
 	created,
 	password;

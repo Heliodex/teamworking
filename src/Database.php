@@ -76,6 +76,12 @@ final class Database
 		return new User(
 			$row["id"],
 			new \DateTime($row["created"]),
+			$row["forename"],
+			$row["surname"],
+			$row["street"],
+			$row["town"],
+			$row["postcode"],
+			MemberCategory::from($row["category"]),
 			$row["email"],
 			$row["password"],
 			$row["cartSize"],
@@ -112,6 +118,12 @@ final class Database
 		return new User(
 			$row["id"],
 			new \DateTime($row["created"]),
+			$row["forename"],
+			$row["surname"],
+			$row["street"],
+			$row["town"],
+			$row["postcode"],
+			MemberCategory::from($row["category"]),
 			$email,
 			$row["password"],
 		);
@@ -138,7 +150,7 @@ final class Database
 		}
 	}
 
-	final public static function registerUser(string $email, string $passwordRaw): ?string
+	final public static function registerUser(string $forename, string $surname, string $street, string $town, string $postcode, MemberCategory $category, string $email, string $passwordRaw): ?string
 	{
 		try {
 			$registerUserQuery = file_get_contents(__DIR__ . "/registerUser.sql");
@@ -146,6 +158,12 @@ final class Database
 				$registerUserQuery
 			);
 			$stmt->execute([
+				$forename,
+				$surname,
+				$street,
+				$town,
+				$postcode,
+				$category->value,
 				$email,
 				password_hash($passwordRaw, PASSWORD_ARGON2ID),
 			]);

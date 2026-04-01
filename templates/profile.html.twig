@@ -7,9 +7,38 @@
 {% block main %}
     <h1>Profile</h1>
 
-	<p>Your email is {{ user.email }}</p>
+    <p>Your email is {{ user.email }}</p>
 
-    <h2>Update password</h2>
+    <h2 style="padding-top: 1rem">Details</h2>
+
+    <table>
+        <tr>
+            <th>Forename</th>
+            <td>{{ user.forename }}</td>
+        </tr>
+        <tr>
+            <th>Surname</th>
+            <td>{{ user.surname }}</td>
+        </tr>
+        <tr>
+            <th>Street</th>
+            <td>{{ user.street }}</td>
+        </tr>
+        <tr>
+            <th>Town</th>
+            <td>{{ user.town }}</td>
+        </tr>
+        <tr>
+            <th>Postcode</th>
+            <td>{{ user.postcode }}</td>
+        </tr>
+        <tr>
+            <th>Category</th>
+            <td>{{ user.category.value }}</td>
+        </tr>
+    </table>
+
+    <h2 style="padding-top: 2rem">Update password</h2>
 
     {{ form(form) }}
 {% endblock %}

@@ -2,6 +2,12 @@ CREATE TABLE
 	IF NOT EXISTS user (
 		id VARCHAR(32) PRIMARY KEY DEFAULT (lower(hex (randomblob (16)))),
 		created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+		forename TEXT NOT NULL,
+		surname TEXT NOT NULL,
+		street TEXT NOT NULL,
+		town TEXT NOT NULL,
+		postcode TEXT NOT NULL,
+		category INTEGER NOT NULL CHECK (category IN (0, 1, 2)),
 		email TEXT NOT NULL UNIQUE,
 		password TEXT NOT NULL
 	);
