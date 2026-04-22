@@ -279,9 +279,24 @@ final class Database
 				return;
 			}
 
+			// fetch product stock and clamp requested qty to available stock
+			$stockStmt = self::pdo()->prepare("SELECT stock FROM product WHERE id = :productId");
+			$stockStmt->execute(["productId" => $productId]);
+			$productRow = $stockStmt->fetch(\PDO::FETCH_ASSOC);
+			if (!$productRow) {
+				Log::error("Product not found when setting cart quantity: {$productId}");
+				return;
+			}
+
+			$finalQty = min($qty, (int) $productRow["stock"]);
+			if ($finalQty < 1) {
+				self::changeCart($userId, $productId, false);
+				return;
+			}
+
 			$stmt = self::pdo()->prepare("UPDATE purchase SET quantity = :qty WHERE userId = :userId AND productId = :productId AND completed = 0");
 			$stmt->execute([
-				"qty" => $qty,
+				"qty" => $finalQty,
 				"userId" => $userId,
 				"productId" => $productId,
 			]);
