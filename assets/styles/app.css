@@ -256,8 +256,9 @@ footer {
 		padding-bottom: 0;
 	}
 
-	& .price {
+	& data {
 		font-weight: 500;
+		display: block;
 	}
 }
 

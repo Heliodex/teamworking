@@ -26,16 +26,18 @@ CREATE TABLE
 		created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 		name TEXT NOT NULL,
 		description TEXT,
-		price INTEGER NOT NULL -- as pence
+		price INTEGER NOT NULL, -- as pence
+		stock INTEGER NOT NULL DEFAULT 0 CHECK (stock >= 0)
 	);
 
 -- insert sample products if not exists
 INSERT INTO
-	product (name, description, price)
+	product (name, description, price, stock)
 SELECT
 	'Product 1',
 	'A sample product description',
-	19999
+	19999,
+	5
 WHERE
 	NOT EXISTS (
 		SELECT

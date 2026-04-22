@@ -198,7 +198,7 @@ final class Database
 		try {
 			$stmt = self::pdo()->prepare(
 				"SELECT
-					p.id, p.created, p.name, p.description, p.price,
+					p.id, p.created, p.name, p.description, p.price, p.stock,
 					EXISTS (SELECT 1 FROM purchase WHERE userId = :userid AND productId = p.id AND completed = false) AS inCart
 				FROM product p"
 			);
@@ -211,6 +211,7 @@ final class Database
 					$row["name"],
 					$row["description"],
 					$row["price"],
+					$row["stock"],
 					0,
 					$row["inCart"],
 				);
@@ -226,7 +227,7 @@ final class Database
 	{
 		try {
 			$stmt = self::pdo()->prepare(
-				"SELECT p.id, p.created, p.name, p.description, p.price, pu.quantity
+				"SELECT p.id, p.created, p.name, p.description, p.price, p.stock, pu.quantity
 				FROM product p
 				INNER JOIN purchase pu ON p.id = pu.productId
 				WHERE pu.userId = :userid AND pu.completed = false"
@@ -240,6 +241,7 @@ final class Database
 					$row["name"],
 					$row["description"],
 					$row["price"],
+					$row["stock"],
 					$row["quantity"],
 					true,
 				);
