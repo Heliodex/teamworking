@@ -17,6 +17,6 @@ graph
 		Logout
 	end
 
-	Logout-->loggedout
-	Login-->loggedin
+	Logout-->Login
+	Login-->Home
 ```
