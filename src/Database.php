@@ -256,14 +256,11 @@ final class Database
 	final public static function changeCart(string $userId, string $productId, bool $add): void
 	{
 		try {
-			$stmt = self::pdo()->prepare(
-				$add ? "INSERT INTO purchase (userId, productId) VALUES (:userId, :productId)"
-				: "DELETE FROM purchase WHERE userId = :userId AND productId = :productId AND completed = 0"
-			);
-			$stmt->execute([
-				"userId" => $userId,
-				"productId" => $productId,
-			]);
+			$addProductQuery = file_get_contents(__DIR__ . "/addProduct.sql");
+			$removeProductQuery = file_get_contents(__DIR__ . "/removeProduct.sql");
+
+			$stmt = self::pdo()->prepare($add ? $addProductQuery : $removeProductQuery);
+			$stmt->execute([$userId, $productId]);
 		} catch (\PDOException $e) {
 			Log::error("Database error during cart change: {$e->getMessage()}");
 		}
@@ -280,8 +277,10 @@ final class Database
 			}
 
 			// fetch product stock and clamp requested qty to available stock
-			$stockStmt = self::pdo()->prepare("SELECT stock FROM product WHERE id = :productId");
-			$stockStmt->execute(["productId" => $productId]);
+			$getProductStockQuery = file_get_contents(__DIR__ . "/getProductStock.sql");
+			$stockStmt = self::pdo()->prepare($getProductStockQuery);
+			$stockStmt->execute([$productId]);
+
 			$productRow = $stockStmt->fetch(\PDO::FETCH_ASSOC);
 			if (!$productRow) {
 				Log::error("Product not found when setting cart quantity: {$productId}");
@@ -294,12 +293,9 @@ final class Database
 				return;
 			}
 
-			$stmt = self::pdo()->prepare("UPDATE purchase SET quantity = :qty WHERE userId = :userId AND productId = :productId AND completed = 0");
-			$stmt->execute([
-				"qty" => $finalQty,
-				"userId" => $userId,
-				"productId" => $productId,
-			]);
+			$updateCartQuery = file_get_contents(__DIR__ . "/updateCart.sql");
+			$stmt = self::pdo()->prepare($updateCartQuery);
+			$stmt->execute([$finalQty, $userId, $productId]);
 		} catch (\PDOException $e) {
 			Log::error("Database error during cart quantity change: {$e->getMessage()}");
 		}
