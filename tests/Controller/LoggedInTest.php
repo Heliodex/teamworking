@@ -2,7 +2,7 @@
 
 namespace App\Tests\Controller;
 
-use App\Database;
+use App\{Database, MemberCategory};
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -13,7 +13,7 @@ final class LoggedInTest extends WebTestCase
 		// Create test user if it doesn't exist
 		$testUser = Database::checkUser("testuser@example.com", "testpassword");
 		if (!$testUser) {
-			Database::registerUser("testuser@example.com", "testpassword");
+			Database::registerUser("test", "test", "test", "test", "test", MemberCategory::Bronze, "testuser@example.com", "testpassword");
 			// Re-fetch to ensure we have a fresh instance
 			$testUser = Database::checkUser("testuser@example.com", "testpassword");
 		}
