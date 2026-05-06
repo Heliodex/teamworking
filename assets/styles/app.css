@@ -108,6 +108,13 @@ button:not(form button) {
 	}
 }
 
+.btn {
+	color: white;
+	&:hover {
+		color: var(--blue-1);
+	}
+}
+
 .smallbtn {
 	max-width: fit-content;
 }
