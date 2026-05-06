@@ -69,6 +69,7 @@ final class Database
 		$getUserBySessionQuery = file_get_contents(__DIR__ . "/getUserBySession.sql");
 		$stmt = self::pdo()->prepare($getUserBySessionQuery);
 		$stmt->execute([$sess]);
+
 		$row = $stmt->fetch(\PDO::FETCH_ASSOC);
 		if (!$row)
 			return null;
@@ -93,6 +94,7 @@ final class Database
 		$createSessionQuery = file_get_contents(__DIR__ . "/createSession.sql");
 		$stmt = self::pdo()->prepare($createSessionQuery);
 		$stmt->execute([$userId]);
+
 		$row = $stmt->fetch(\PDO::FETCH_ASSOC);
 		return $row["id"];
 	}
@@ -108,6 +110,7 @@ final class Database
 		$getUserByEmailQuery = file_get_contents(__DIR__ . "/getUserByEmail.sql");
 		$stmt = self::pdo()->prepare($getUserByEmailQuery);
 		$stmt->execute([$email]);
+
 		$row = $stmt->fetch(\PDO::FETCH_ASSOC);
 		if (!$row)
 			return null;
@@ -167,6 +170,7 @@ final class Database
 				$email,
 				password_hash($passwordRaw, PASSWORD_ARGON2ID),
 			]);
+
 			$row = $stmt->fetch(\PDO::FETCH_ASSOC);
 			if (!$row)
 				return null;
@@ -181,11 +185,13 @@ final class Database
 	final public static function updatePassword(string $userId, string $newPasswordRaw): bool
 	{
 		try {
-			$stmt = self::pdo()->prepare("UPDATE user SET password = :password WHERE id = :userId");
+			$updatePasswordQuery = file_get_contents(__DIR__ . "/updatePassword.sql");
+			$stmt = self::pdo()->prepare($updatePasswordQuery);
 			$stmt->execute([
-				"userId" => $userId,
-				"password" => password_hash($newPasswordRaw, PASSWORD_ARGON2ID),
+				password_hash($newPasswordRaw, PASSWORD_ARGON2ID),
+				$userId,
 			]);
+
 			return true;
 		} catch (\PDOException $e) {
 			Log::error("Database error during password update: {$e->getMessage()}");
@@ -196,15 +202,12 @@ final class Database
 	final public static function getProducts(string $userId): array
 	{
 		try {
-			$stmt = self::pdo()->prepare(
-				"SELECT
-					p.id, p.created, p.name, p.description, p.price, p.stock,
-					EXISTS (SELECT 1 FROM purchase WHERE userId = :userid AND productId = p.id AND completed = false) AS inCart
-				FROM product p"
-			);
-			$stmt->execute(["userid" => $userId]);
+			$getProductsQuery = file_get_contents(__DIR__ . "/getProducts.sql");
+			$stmt = self::pdo()->prepare($getProductsQuery);
+			$stmt->execute([$userId]);
+
 			$products = [];
-			while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+			while ($row = $stmt->fetch(\PDO::FETCH_ASSOC))
 				$products[] = new Product(
 					$row["id"],
 					new \DateTime($row["created"]),
@@ -215,7 +218,7 @@ final class Database
 					0,
 					$row["inCart"],
 				);
-			}
+
 			return $products;
 		} catch (\PDOException $e) {
 			Log::error("Database error during product retrieval: {$e->getMessage()}");
@@ -226,15 +229,12 @@ final class Database
 	final public static function getCart(string $userId): array
 	{
 		try {
-			$stmt = self::pdo()->prepare(
-				"SELECT p.id, p.created, p.name, p.description, p.price, p.stock, pu.quantity
-				FROM product p
-				INNER JOIN purchase pu ON p.id = pu.productId
-				WHERE pu.userId = :userid AND pu.completed = false"
-			);
-			$stmt->execute(["userid" => $userId]);
+			$getCartQuery = file_get_contents(__DIR__ . "/getCart.sql");
+			$stmt = self::pdo()->prepare($getCartQuery);
+			$stmt->execute([$userId]);
+
 			$products = [];
-			while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+			while ($row = $stmt->fetch(\PDO::FETCH_ASSOC))
 				$products[] = new Product(
 					$row["id"],
 					new \DateTime($row["created"]),
@@ -245,7 +245,7 @@ final class Database
 					$row["quantity"],
 					true,
 				);
-			}
+
 			return $products;
 		} catch (\PDOException $e) {
 			Log::error("Database error during cart retrieval: {$e->getMessage()}");
