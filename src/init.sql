@@ -9,8 +9,15 @@ CREATE TABLE
 		postcode TEXT NOT NULL,
 		category INTEGER NOT NULL CHECK (category IN (0, 1, 2)),
 		email TEXT NOT NULL UNIQUE,
+		admin BOOLEAN NOT NULL DEFAULT 0 CHECK (admin IN (0, 1)), -- we could change to more permissions later
 		password TEXT NOT NULL
 	);
+
+UPDATE user
+SET
+	admin = 1
+WHERE
+	email = "test@test.co";
 
 CREATE TABLE
 	IF NOT EXISTS session (

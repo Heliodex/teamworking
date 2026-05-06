@@ -8,6 +8,7 @@ SELECT
 	u.postcode,
 	u.category,
 	u.password,
+	u.admin,
 	u.email,
 	(
 		SELECT

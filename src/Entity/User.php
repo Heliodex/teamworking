@@ -18,6 +18,7 @@ readonly final class User
 	final public MemberCategory $category;
 	final public string $email;
 	final public string $password;
+	final public bool $admin;
 	final public ?int $cartSize;
 
 	final public function __construct(
@@ -31,6 +32,7 @@ readonly final class User
 		MemberCategory $category,
 		string $email,
 		string $password,
+		bool $admin = false,
 		?int $cartSize = null
 	) {
 		$this->id = $id;
@@ -43,6 +45,7 @@ readonly final class User
 		$this->category = $category;
 		$this->email = $email;
 		$this->password = $password;
+		$this->admin = $admin;
 		$this->cartSize = $cartSize;
 	}
 }

@@ -85,6 +85,7 @@ final class Database
 			MemberCategory::from($row["category"]),
 			$row["email"],
 			$row["password"],
+			(bool) $row["admin"],
 			$row["cartSize"],
 		);
 	}
