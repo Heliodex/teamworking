@@ -7,6 +7,9 @@
         {% endif %}
     </a></li>
     <li><a href="{{ path('profile') }}">Profile</a></li>
+    {% if user.admin %}
+        <li><a href="{{ path('admin') }}">Admin</a></li>
+    {% endif %}
 {% endmacro %}
 
 {% macro navEmail(user) %}
