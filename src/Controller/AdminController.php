@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\{Request, Response};
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 
 final class AdminController extends Base
@@ -13,10 +14,8 @@ final class AdminController extends Base
 		$user = $this->user($request);
 		if (!$user)
 			return $this->redirectToRoute("home");
-		if (!$user->admin) {
-			// todo: return 401
-		}
-
+		if (!$user->admin)
+			throw new AccessDeniedHttpException("You do not have permission to access this page.", null, 403);
 
 		return $this->finish($request, "admin.html.twig", [
 			"user" => $user,
