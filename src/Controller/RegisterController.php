@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class RegisterController extends Base
 {
-	#[Route("/register", name: "register", options: ["sitemap" => true])]
+	#[Route("/register", methods: ["GET", "POST"], name: "register", options: ["sitemap" => true])]
 	final public function register(Request $request): Response
 	{
 		$user = $this->user($request);

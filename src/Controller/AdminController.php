@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class AdminController extends Base
 {
-	#[Route("/admin", name: "admin")]
+	#[Route("/admin", methods: ["GET", "POST"], name: "admin")]
 	final public function admin(Request $request): Response
 	{
 		$user = $this->user($request);

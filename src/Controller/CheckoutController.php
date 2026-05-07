@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class CheckoutController extends Base
 {
-	#[Route("/checkout", name: "checkout")]
+	#[Route("/checkout", methods: ["GET", "POST"], name: "checkout")]
 	final public function home(Request $request): Response
 	{
 		$user = $this->user($request);
