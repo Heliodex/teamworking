@@ -24,6 +24,7 @@ final class LoggedInTest extends WebTestCase
 		$form["login[email]"] = "testuser@example.com";
 		$form["login[password]"] = "testpassword";
 		$client->submit($form);
+		$this->assertResponseRedirects("/home", 303);
 		$client->followRedirect();
 		$this->assertResponseIsSuccessful();
 	}
@@ -34,7 +35,7 @@ final class LoggedInTest extends WebTestCase
 		$this->logIn($client);
 		$client->request("GET", "/");
 		// Authenticated users cannot access index page, should redirect to /home
-		$this->assertResponseRedirects("/home");
+		$this->assertResponseRedirects("/home", 302);
 		$client->followRedirect();
 		$this->assertResponseIsSuccessful();
 	}
@@ -45,7 +46,7 @@ final class LoggedInTest extends WebTestCase
 		$this->logIn($client);
 		$client->request("GET", "/login");
 		// Authenticated users cannot access login page
-		$this->assertResponseRedirects("/home");
+		$this->assertResponseRedirects("/home", 302);
 		$client->followRedirect();
 		$this->assertResponseIsSuccessful();
 	}
@@ -56,7 +57,7 @@ final class LoggedInTest extends WebTestCase
 		$this->logIn($client);
 		$client->request("GET", "/register");
 		// Authenticated users cannot access register page
-		$this->assertResponseRedirects("/home");
+		$this->assertResponseRedirects("/home", 302);
 		$client->followRedirect();
 		$this->assertResponseIsSuccessful();
 	}
@@ -93,7 +94,7 @@ final class LoggedInTest extends WebTestCase
 		// After logIn(), make a POST request to /logout
 		$client->request("POST", "/logout");
 		// User is logged out, should redirect to /login
-		$this->assertResponseRedirects("/login");
+		$this->assertResponseRedirects("/login", 303);
 		$client->followRedirect();
 		$this->assertResponseIsSuccessful();
 	}

@@ -16,7 +16,7 @@ final class ProfileController extends Base
 	{
 		$user = $this->user($request);
 		if (!$user)
-			return $this->redirectToRoute("login");
+			return $this->redirectToLogin($request);
 
 		$updatePassword = new UpdatePassword();
 		$form = $this->createForm(UpdatePasswordType::class, $updatePassword);

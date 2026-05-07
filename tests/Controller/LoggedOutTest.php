@@ -31,7 +31,7 @@ final class LoggedOutTest extends WebTestCase
 	{
 		$client = self::createClient();
 		$client->request("GET", "/home");
-		$this->assertResponseRedirects("/login");
+		$this->assertResponseRedirects("/login", 302);
 		$client->followRedirect();
 		$this->assertResponseIsSuccessful();
 	}
@@ -40,7 +40,7 @@ final class LoggedOutTest extends WebTestCase
 	{
 		$client = self::createClient();
 		$client->request("GET", "/cart");
-		$this->assertResponseRedirects("/login");
+		$this->assertResponseRedirects("/login", 302);
 		$client->followRedirect();
 		$this->assertResponseIsSuccessful();
 	}
@@ -49,7 +49,7 @@ final class LoggedOutTest extends WebTestCase
 	{
 		$client = self::createClient();
 		$client->request("GET", "/profile");
-		$this->assertResponseRedirects("/login");
+		$this->assertResponseRedirects("/login", 302);
 		$client->followRedirect();
 		$this->assertResponseIsSuccessful();
 	}
@@ -58,7 +58,7 @@ final class LoggedOutTest extends WebTestCase
 	{
 		$client = self::createClient();
 		$client->request("POST", "/logout");
-		$this->assertResponseRedirects("/login");
+		$this->assertResponseRedirects("/login", 303);
 		$client->followRedirect();
 		$this->assertResponseIsSuccessful();
 	}

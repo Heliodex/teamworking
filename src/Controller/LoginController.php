@@ -16,7 +16,7 @@ final class LoginController extends Base
 	{
 		$user = $this->user($request);
 		if ($user)
-			return $this->redirectToRoute("home");
+			return $this->redirectToHome($request);
 
 		$login = new Login();
 		$form = $this->createForm(LoginType::class, $login);

@@ -13,7 +13,7 @@ final class AdminController extends Base
 	{
 		$user = $this->user($request);
 		if (!$user)
-			return $this->redirectToRoute("home");
+			return $this->redirectToHome($request);
 		if (!$user->admin)
 			throw new AccessDeniedHttpException("You do not have permission to access this page.", null, 403);
 

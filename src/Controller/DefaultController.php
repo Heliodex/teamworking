@@ -13,7 +13,7 @@ final class DefaultController extends Base
 	{
 		$user = $this->user($request);
 		if ($user)
-			return $this->redirectToRoute("home");
+			return $this->redirectToHome($request);
 
 		$number = Database::getRandomNumber();
 

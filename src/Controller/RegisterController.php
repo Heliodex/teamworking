@@ -16,7 +16,7 @@ final class RegisterController extends Base
 	{
 		$user = $this->user($request);
 		if ($user)
-			return $this->redirectToRoute("home");
+			return $this->redirectToHome($request);
 
 		$register = new Register();
 		$form = $this->createForm(RegisterType::class, $register);

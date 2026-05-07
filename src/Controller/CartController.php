@@ -13,7 +13,7 @@ final class CartController extends Base
 	{
 		$user = $this->user($request);
 		if (!$user)
-			return $this->redirectToRoute("login");
+			return $this->redirectToLogin($request);
 
 		if ($request->isMethod("POST")) {
 			$productId = $request->request->get("productId");

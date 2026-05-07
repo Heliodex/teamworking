@@ -16,6 +16,6 @@ final class LogoutController extends Base
 		if ($sess)
 			Database::invalidateSession($sess);
 
-		return $this->redirectToRoute("login");
+		return $this->redirectToLogin($request);
 	}
 }

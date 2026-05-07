@@ -13,11 +13,10 @@ final class CheckoutController extends Base
 	{
 		$user = $this->user($request);
 		if (!$user)
-			return $this->redirectToRoute("login");
+			return $this->redirectToLogin($request);
 
-		if ($request->isMethod("POST")) {
-			return $this->redirectToRoute("home");
-		}
+		if ($request->isMethod("POST"))
+			return $this->redirectToHome($request);
 
 		$cart = Database::getCart($user->id);
 

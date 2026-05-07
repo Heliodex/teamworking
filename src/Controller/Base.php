@@ -19,6 +19,16 @@ class Base extends AbstractController
 		return Database::getUserBySessionId($sess);
 	}
 
+	final protected function redirectToLogin(Request $request): Response
+	{
+		return $this->redirectToRoute("login", [], $request->isMethod("POST") ? 303 : 302);
+	}
+
+	final protected function redirectToHome(Request $request): Response
+	{
+		return $this->redirectToRoute("home", [], $request->isMethod("POST") ? 303 : 302);
+	}
+
 	final protected function finish(Request $request, string $view, array $parameters = []): Response
 	{
 		$user = $this->user($request);
