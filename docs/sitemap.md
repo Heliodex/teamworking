@@ -14,6 +14,7 @@ graph
 		Home
 		Cart-.->Checkout
 		Profile
+		Admin
 		Logout
 	end
 
