@@ -27,29 +27,12 @@ final class RegisterController extends Base
 
 		$form->handleRequest($request);
 		if ($form->isSubmitted() && $form->isValid()) {
-			$data = $form->getData();
-
-			$forename = $data->forename;
-			$surname = $data->surname;
-			$street = $data->street;
-			$town = $data->town;
-			$postcode = $data->postcode;
-			$category = $data->memberCategory;
-			$email = $data->email;
-			$password = $data->password;
-			$confirmPassword = $data->confirmPassword;
-
-			if (!($category instanceof MemberCategory)) {
-				$form->addError(new FormError("Invalid member category"));
-				return $finish();
-			}
-
-			if ($password !== $confirmPassword) {
+			if ($register->password !== $register->confirmPassword) {
 				$form->addError(new FormError("Passwords do not match"));
 				return $finish();
 			}
 
-			$sess = Database::registerUser($forename, $surname, $street, $town, $postcode, $category, $email, $password);
+			$sess = Database::registerUser($register);
 			if (!$sess) {
 				$form->addError(new FormError("Registration failed. An account may already be registered with this email address."));
 				return $finish();

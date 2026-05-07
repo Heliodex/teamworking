@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App\Entity\{AddProduct, Login, Product, User};
+use App\Entity\{AddProduct, Login, Product, Register, User};
 
 final class Database
 {
@@ -154,7 +154,7 @@ final class Database
 		}
 	}
 
-	final public static function registerUser(string $forename, string $surname, string $street, string $town, string $postcode, MemberCategory $category, string $email, string $passwordRaw): ?string
+	final public static function registerUser(Register $register): ?string
 	{
 		try {
 			$registerUserQuery = file_get_contents(__DIR__ . "/registerUser.sql");
@@ -162,14 +162,14 @@ final class Database
 				$registerUserQuery
 			);
 			$stmt->execute([
-				$forename,
-				$surname,
-				$street,
-				$town,
-				$postcode,
-				$category->value,
-				$email,
-				password_hash($passwordRaw, PASSWORD_ARGON2ID),
+				$register->forename,
+				$register->surname,
+				$register->street,
+				$register->town,
+				$register->postcode,
+				$register->memberCategory->value,
+				$register->email,
+				password_hash($register->password, PASSWORD_ARGON2ID),
 			]);
 
 			$row = $stmt->fetch(\PDO::FETCH_ASSOC);
