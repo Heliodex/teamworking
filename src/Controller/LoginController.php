@@ -43,7 +43,7 @@ final class LoginController extends Base
 			$session = $request->getSession();
 			$session->set("id", $sess);
 
-			return $this->redirectToRoute("home");
+			return $this->redirectToRoute("home", [], 303);
 		}
 
 		return $finish();

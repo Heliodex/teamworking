@@ -59,7 +59,7 @@ final class RegisterController extends Base
 			$session->set("id", $sess);
 
 			// Redirect to home page after successful registration
-			return $this->redirectToRoute("home");
+			return $this->redirectToRoute("home", [], 303);
 		}
 
 		return $finish();
