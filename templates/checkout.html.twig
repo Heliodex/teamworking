@@ -7,27 +7,29 @@
 {% block main %}
     <h1>Checkout</h1>
 
-    {% for product in cart %}
-        <article class="product">
-            <div class="info">
-                <h2>{{ product.name }}</h2>
-                <p>{{ product.description }}</p>
-                <data value="{{ product.price }}">Price: £{{ product.price / 100 }}</data>
-            </div>
+    <div class="products">
+        {% for product in cart %}
+            <article class="product">
+                <div class="info">
+                    <h2>{{ product.name }}</h2>
+                    <p>{{ product.description }}</p>
+                    <data value="{{ product.price }}">Price: £{{ product.price / 100 }}</data>
+                </div>
 
-            <data value="{{ product.quantity }}">Quantity: {{ product.quantity }}</data>
-        </article>
+                <data value="{{ product.quantity }}">Quantity: {{ product.quantity }}</data>
+            </article>
+        {% endfor %}
+    </div>
 
-        <hr>
+    <hr>
 
-        <p>Total: £{{ (product.price * product.quantity) / 100 }}</p>
+    {% if cart|length == 0 %}
+        <p>Your cart is empty.</p>
+    {% else %}
+        <p>Total: £{{ (total / 100)|number_format(2, ".", " ") }}</p>
 
         <form method="post">
             <button type="submit">Complete purchase</button>
         </form>
-    {% endfor %}
-
-    {% if cart|length == 0 %}
-        <p>Your cart is empty.</p>
     {% endif %}
 {% endblock %}

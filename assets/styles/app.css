@@ -248,6 +248,12 @@ footer {
 	padding-top: var(--size-7);
 }
 
+.products {
+	display: flex;
+	flex-direction: column;
+	gap: var(--size-4);
+}
+
 .product {
 	display: flex;
 	justify-content: space-between;

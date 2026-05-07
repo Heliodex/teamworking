@@ -7,31 +7,33 @@
 {% block main %}
     <h1>Cart</h1>
 
-    {% for product in cart %}
-        <article class="product">
-            <div class="info">
-                <h2>{{ product.name }}</h2>
-                <p>{{ product.description }}</p>
-                <data value="{{ product.price }}">Price: £{{ product.price / 100 }}</data>
-            </div>
+    <div class="products">
+        {% for product in cart %}
+            <article class="product">
+                <div class="info">
+                    <h2>{{ product.name }}</h2>
+                    <p>{{ product.description }}</p>
+                    <data value="{{ product.price }}">Price: £{{ product.price / 100 }}</data>
+                </div>
 
-            {# TODO: better user experience with a custom 'quantity' field and an 'Update" button? #}
-            <form method="post" class="qty">
-                <button type="submit" name="set" value="{{ product.quantity - 1 }}">-</button>
-                <input type="hidden" name="productId" value="{{ product.id }}">
-                {{ product.quantity }}
-                <button type="submit" name="set" value="{{ product.quantity + 1 }}">+</button>
-            </form>
-        </article>
+                {# TODO: better user experience with a custom 'quantity' field and an 'Update" button? #}
+                <form method="post" class="qty">
+                    <button type="submit" name="set" value="{{ product.quantity - 1 }}">-</button>
+                    <input type="hidden" name="productId" value="{{ product.id }}">
+                    {{ product.quantity }}
+                    <button type="submit" name="set" value="{{ product.quantity + 1 }}">+</button>
+                </form>
+            </article>
+        {% endfor %}
+    </div>
 
-        <hr>
-
-        <p>Total: £{{ (product.price * product.quantity) / 100 }}</p>
-
-        <a href="{{ path('checkout') }}" class="btn btn-primary">Checkout</a>
-    {% endfor %}
+    <hr>
 
     {% if cart|length == 0 %}
-        <p>Your cart is empty.</p>
+        <p>Your cart is empty. Why not <a href="{{ path('home') }}">add some products</a>?</p>
+    {% else %}
+		<p>Total: £{{ (total / 100)|number_format(2, ".", " ") }}</p>
+
+        <a href="{{ path('checkout') }}" class="btn btn-primary">Checkout</a>
     {% endif %}
 {% endblock %}
