@@ -1,4 +1,4 @@
 INSERT INTO
-	purchase (userId, productId)
+	product (name, description, price, stock)
 VALUES
-	(?, ?);
+	(?, ?, ?, ?);

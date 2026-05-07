@@ -257,10 +257,10 @@ final class Database
 	final public static function changeCart(string $userId, string $productId, bool $add): void
 	{
 		try {
-			$addProductQuery = file_get_contents(__DIR__ . "/addProduct.sql");
-			$removeProductQuery = file_get_contents(__DIR__ . "/removeProduct.sql");
+			$addToCartQuery = file_get_contents(__DIR__ . "/addToCart.sql");
+			$removeFromCartQuery = file_get_contents(__DIR__ . "/removeFromCart.sql");
 
-			$stmt = self::pdo()->prepare($add ? $addProductQuery : $removeProductQuery);
+			$stmt = self::pdo()->prepare($add ? $addToCartQuery : $removeFromCartQuery);
 			$stmt->execute([$userId, $productId]);
 		} catch (\PDOException $e) {
 			Log::error("Database error during cart change: {$e->getMessage()}");
@@ -299,6 +299,17 @@ final class Database
 			$stmt->execute([$finalQty, $userId, $productId]);
 		} catch (\PDOException $e) {
 			Log::error("Database error during cart quantity change: {$e->getMessage()}");
+		}
+	}
+
+	final public static function addProduct(string $name, string $description, float $price, int $stock): void
+	{
+		try {
+			$addProductQuery = file_get_contents(__DIR__ . "/addProduct.sql");
+			$stmt = self::pdo()->prepare($addProductQuery);
+			$stmt->execute([$name, $description, $price, $stock]);
+		} catch (\PDOException $e) {
+			Log::error("Database error during product addition: {$e->getMessage()}");
 		}
 	}
 }
