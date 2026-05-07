@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App\Entity\{Product, User};
+use App\Entity\{AddProduct, Login, Product, User};
 
 final class Database
 {
@@ -133,18 +133,18 @@ final class Database
 		);
 	}
 
-	final public static function logInUser(string $email, string $passwordRaw): ?string
+	final public static function logInUser(Login $login): ?string
 	{
 		try {
 			$getUserByEmailQuery = file_get_contents(__DIR__ . "/getUserByEmail.sql");
 			$stmt = self::pdo()->prepare($getUserByEmailQuery);
-			$stmt->execute([$email]);
+			$stmt->execute([$login->email]);
 
 			$row = $stmt->fetch(\PDO::FETCH_ASSOC);
 			if (!$row)
 				return null;
 
-			if (!password_verify($passwordRaw, $row["password"]))
+			if (!password_verify($login->password, $row["password"]))
 				return null;
 
 			return self::createSession($row["id"]);
@@ -302,12 +302,17 @@ final class Database
 		}
 	}
 
-	final public static function addProduct(string $name, string $description, float $price, int $stock): void
+	final public static function addProduct(AddProduct $addProduct): void
 	{
 		try {
 			$addProductQuery = file_get_contents(__DIR__ . "/addProduct.sql");
 			$stmt = self::pdo()->prepare($addProductQuery);
-			$stmt->execute([$name, $description, $price, $stock]);
+			$stmt->execute([
+				$addProduct->name,
+				$addProduct->description,
+				$addProduct->price,
+				$addProduct->stock
+			]);
 		} catch (\PDOException $e) {
 			Log::error("Database error during product addition: {$e->getMessage()}");
 		}

@@ -2,6 +2,7 @@
 
 namespace App\Form\Type;
 
+use App\Entity\AddProduct;
 use Symfony\Component\Form\Extension\Core\Type\{IntegerType, SubmitType, TextType};
 use Symfony\Component\Form\{AbstractType, FormBuilderInterface};
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -13,7 +14,7 @@ final class AddProductType extends AbstractType
 		$builder
 			->add("name", TextType::class)
 			->add("description", TextType::class)
-			->add("price", TextType::class)
+			->add("price", IntegerType::class)
 			->add("stock", IntegerType::class)
 			->add("submit", SubmitType::class, [
 				"label" => "Add Product",
@@ -23,7 +24,7 @@ final class AddProductType extends AbstractType
 	final public function configureOptions(OptionsResolver $resolver): void
 	{
 		$resolver->setDefaults([
-			"data_class" => AddProductType::class,
+			"data_class" => AddProduct::class,
 		]);
 	}
 }

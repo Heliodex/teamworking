@@ -4,7 +4,7 @@ namespace App\Entity;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
- final class Register extends MemberDetails
+final class Register extends MemberDetails
 {
 	#[Assert\NotBlank]
 	#[Assert\Length(min: 1)]
