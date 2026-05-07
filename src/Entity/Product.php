@@ -4,14 +4,10 @@ namespace App\Entity;
 
 use DateTime;
 
-readonly final class Product
+final class Product extends AddProduct
 {
 	final public string $id;
 	final public DateTime $created;
-	final public string $name;
-	final public ?string $description;
-	final public int $price;
-	final public int $stock;
 	final public int $quantity;
 	final public bool $inCart;
 
