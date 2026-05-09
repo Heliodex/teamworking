@@ -1,0 +1,33 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+    Orders
+{% endblock %}
+
+{% block main %}
+    <h1>Orders</h1>
+
+	<a href="{{ path('cart') }}">View current order</a>
+
+    <div class="products">
+        {% for product in cart %}
+            <article class="product">
+                <div class="info">
+                    <h2>{{ product.name }}</h2>
+                    <p>{{ product.description }}</p>
+                    <data value="{{ product.price }}">Price: £{{ product.price / 100 }}</data>
+                </div>
+
+                <data value="{{ product.quantity }}">Quantity: {{ product.quantity }}</data>
+            </article>
+        {% endfor %}
+    </div>
+
+    <hr>
+
+    {% if cart|length == 0 %}
+        <p>You have no orders.</p>
+    {% else %}
+        <p>Total: £{{ (total / 100)|number_format(2, ".", " ") }}</p>
+    {% endif %}
+{% endblock %}

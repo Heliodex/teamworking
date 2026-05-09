@@ -7,6 +7,8 @@
 {% block main %}
     <h1>Cart</h1>
 
+    <a href="{{ path('orders') }}">View completed orders</a>
+
     <div class="products">
         {% for product in cart %}
             <article class="product">
@@ -32,7 +34,7 @@
     {% if cart|length == 0 %}
         <p>Your cart is empty. Why not <a href="{{ path('home') }}">add some products</a>?</p>
     {% else %}
-		<p>Total: £{{ (total / 100)|number_format(2, ".", " ") }}</p>
+        <p>Total: £{{ (total / 100)|number_format(2, ".", " ") }}</p>
 
         <a href="{{ path('checkout') }}" class="btn btn-primary">Checkout</a>
     {% endif %}
