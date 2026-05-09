@@ -11,4 +11,4 @@ FROM
 	INNER JOIN purchase pu ON p.id = pu.productId
 WHERE
 	pu.userId = ?
-	AND pu.completed = false;
+	AND pu.completed = ?;

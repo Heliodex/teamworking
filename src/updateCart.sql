@@ -4,4 +4,4 @@ SET
 WHERE
 	userId = ?
 	AND productId = ?
-	AND completed = 0;
+	AND completed = false;

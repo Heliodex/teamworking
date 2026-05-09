@@ -227,12 +227,12 @@ final class Database
 		}
 	}
 
-	final public static function getCart(string $userId): array
+	final public static function getCart(string $userId, bool $completed): array
 	{
 		try {
 			$getCartQuery = file_get_contents(__DIR__ . "/getCart.sql");
 			$stmt = self::pdo()->prepare($getCartQuery);
-			$stmt->execute([$userId]);
+			$stmt->execute([$userId, (int) $completed]);
 
 			$products = [];
 			while ($row = $stmt->fetch(\PDO::FETCH_ASSOC))

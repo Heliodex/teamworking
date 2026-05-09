@@ -18,7 +18,7 @@ final class CheckoutController extends Base
 		if ($request->isMethod("POST"))
 			return $this->redirectToHome($request);
 
-		$cart = Database::getCart($user->id);
+		$cart = Database::getCart($user->id, false);
 
 		$total = 0;
 		foreach ($cart as $item)
