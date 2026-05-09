@@ -302,6 +302,17 @@ final class Database
 		}
 	}
 
+	final public static function completeOrder(string $userId): void
+	{
+		try {
+			$completeOrderQuery = file_get_contents(__DIR__ . "/completeOrder.sql");
+			$stmt = self::pdo()->prepare($completeOrderQuery);
+			$stmt->execute([$userId]);
+		} catch (\PDOException $e) {
+			Log::error("Database error during order completion: {$e->getMessage()}");
+		}
+	}
+
 	final public static function addProduct(AddProduct $addProduct): void
 	{
 		try {
