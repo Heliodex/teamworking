@@ -12,7 +12,7 @@ graph
 
 	subgraph loggedin [Logged in pages]
 		Home
-		Cart-.->Checkout
+		Orders<-.->Cart-.->Checkout
 		Profile
 		Admin
 		Logout

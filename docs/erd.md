@@ -29,7 +29,6 @@ erDiagram
 		integer stock ">= 0"
 	}
 
-
 	purchase {
 		varchar(32) id PK
 		datetime created
