@@ -13,6 +13,9 @@
                 <div class="info">
                     <h2>{{ product.name }}</h2>
                     <p>{{ product.description }}</p>
+
+					<img src="{{ asset('product/' ~ product.id) }}" alt="{{ product.name }} image">
+
                     <data value="{{ product.price }}">Price: £{{ product.price / 100 }}</data>
                     <data value="{{ product.stock }}">Stock: {{ product.stock }}</data>
                 </div>

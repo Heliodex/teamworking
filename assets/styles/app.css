@@ -182,7 +182,7 @@ header {
 
 form {
 	ul {
-		background: hsla(0, 100%, 71%, 0.5);
+		background: hsla(0, 100%, 71%, 0.4);
 		color: var(--red-5);
 		font-size: var(--font-size-0);
 		padding: var(--size-2) var(--size-3);
@@ -203,6 +203,16 @@ form {
 			gap: var(--size-2);
 		}
 	}
+}
+
+ul.flash {
+	background: hsla(120, 100%, 71%, 0.4);
+	color: var(--green-5);
+	font-size: var(--font-size-0);
+	padding: var(--size-2) var(--size-3);
+	border-radius: var(--size-1);
+
+	list-style-position: inside;
 }
 
 .rowform {

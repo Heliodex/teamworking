@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class AddProduct
@@ -18,4 +19,7 @@ class AddProduct
 
 	#[Assert\NotBlank]
 	final public int $stock;
+
+	#[Assert\NotBlank]
+	final public UploadedFile $image;
 }

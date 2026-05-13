@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\{Database, MemberCategory};
+use App\Database;
 use App\Entity\Register;
 use App\Form\Type\RegisterType;
 use Symfony\Component\Form\FormError;

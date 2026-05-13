@@ -3,7 +3,7 @@
 namespace App\Form\Type;
 
 use App\Entity\AddProduct;
-use Symfony\Component\Form\Extension\Core\Type\{IntegerType, SubmitType, TextType};
+use Symfony\Component\Form\Extension\Core\Type\{FileType, IntegerType, SubmitType, TextType};
 use Symfony\Component\Form\{AbstractType, FormBuilderInterface};
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -16,6 +16,10 @@ final class AddProductType extends AbstractType
 			->add("description", TextType::class)
 			->add("price", IntegerType::class)
 			->add("stock", IntegerType::class)
+			->add("image", FileType::class, [
+				// only allow images
+				"attr" => ["accept" => "image/*"],
+			])
 			->add("submit", SubmitType::class, [
 				"label" => "Add Product",
 			]);

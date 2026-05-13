@@ -381,7 +381,7 @@ final class Database
 		}
 	}
 
-	final public static function addProduct(AddProduct $addProduct): void
+	final public static function addProduct(AddProduct $addProduct): ?string
 	{
 		try {
 			$addProductQuery = file_get_contents(__DIR__ . "/addProduct.sql");
@@ -392,8 +392,15 @@ final class Database
 				$addProduct->price,
 				$addProduct->stock
 			]);
+
+			$row = $stmt->fetch(PDO::FETCH_ASSOC);
+			if (!$row)
+				return null;
+
+			return $row["id"];
 		} catch (PDOException $e) {
 			Log::error("Database error during product addition: {$e->getMessage()}");
+			return null;
 		}
 	}
 }
