@@ -18,6 +18,7 @@ erDiagram
 		datetime created
 		varchar(32) userId FK
 	}
+
 	session }o--|| user: ""
 
 	product {
@@ -35,7 +36,7 @@ erDiagram
 		varchar(32) userId FK
 		varchar(32) productId FK
 		integer quantity "> 0"
-		boolean completed "0, 1"
+		datetime completed
 	}
 
 	purchase }o--|| user: ""

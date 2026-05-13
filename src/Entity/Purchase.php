@@ -9,9 +9,9 @@ readonly final class Purchase
 	final public string $id;
 	final public DateTime $created;
 	final public Product $product;
-	final public bool $completed;
+	final public DateTime $completed;
 
-	final public function __construct(string $id, DateTime $created, Product $product, bool $completed)
+	final public function __construct(string $id, DateTime $created, Product $product, DateTime $completed)
 	{
 		$this->id = $id;
 		$this->created = $created;

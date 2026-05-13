@@ -17,7 +17,7 @@ SELECT
 			purchase pu
 		WHERE
 			pu.userId = u.id
-			AND pu.completed = 0
+			AND pu.completed IS NULL
 	) AS cartSize
 FROM
 	user u

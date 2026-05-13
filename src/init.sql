@@ -62,7 +62,7 @@ CREATE TABLE
 		userId VARCHAR(32) NOT NULL,
 		productId VARCHAR(32) NOT NULL,
 		quantity INTEGER NOT NULL DEFAULT 1 CHECK (quantity > 0),
-		completed BOOLEAN NOT NULL DEFAULT 0 CHECK (completed IN (0, 1)),
+		completed DATETIME,
 		FOREIGN KEY (userId) REFERENCES user (id) ON DELETE CASCADE,
 		FOREIGN KEY (productId) REFERENCES product (id) ON DELETE CASCADE
 	);

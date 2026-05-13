@@ -2,6 +2,7 @@
 
 namespace App;
 
+use DateTime;
 use App\Entity\{AddProduct, Login, Product, Register, User};
 
 final class Database
@@ -76,7 +77,7 @@ final class Database
 
 		return new User(
 			$row["id"],
-			new \DateTime($row["created"]),
+			new DateTime($row["created"]),
 			$row["forename"],
 			$row["surname"],
 			$row["street"],
@@ -121,7 +122,7 @@ final class Database
 
 		return new User(
 			$row["id"],
-			new \DateTime($row["created"]),
+			new DateTime($row["created"]),
 			$row["forename"],
 			$row["surname"],
 			$row["street"],
@@ -211,7 +212,7 @@ final class Database
 			while ($row = $stmt->fetch(\PDO::FETCH_ASSOC))
 				$products[] = new Product(
 					$row["id"],
-					new \DateTime($row["created"]),
+					new DateTime($row["created"]),
 					$row["name"],
 					$row["description"],
 					$row["price"],
@@ -238,7 +239,7 @@ final class Database
 			while ($row = $stmt->fetch(\PDO::FETCH_ASSOC))
 				$products[] = new Product(
 					$row["id"],
-					new \DateTime($row["created"]),
+					new DateTime($row["created"]),
 					$row["name"],
 					$row["description"],
 					$row["price"],
@@ -257,11 +258,21 @@ final class Database
 	final public static function changeCart(string $userId, string $productId, bool $add): void
 	{
 		try {
-			$addToCartQuery = file_get_contents(__DIR__ . "/addToCart.sql");
-			$removeFromCartQuery = file_get_contents(__DIR__ . "/removeFromCart.sql");
-
-			$stmt = self::pdo()->prepare($add ? $addToCartQuery : $removeFromCartQuery);
+			$inCartQuery = file_get_contents(__DIR__ . "/inCart.sql");
+			$stmt = self::pdo()->prepare($inCartQuery);
 			$stmt->execute([$userId, $productId]);
+
+			$inCart = $stmt->fetch(\PDO::FETCH_ASSOC) !== false;
+
+			if ($add && !$inCart) {
+				$addToCartQuery = file_get_contents(__DIR__ . "/addToCart.sql");
+				$stmt2 = self::pdo()->prepare($addToCartQuery);
+				$stmt2->execute([$userId, $productId]);
+			} else if (!$add && $inCart) {
+				$removeFromCartQuery = file_get_contents(__DIR__ . "/removeFromCart.sql");
+				$stmt2 = self::pdo()->prepare($removeFromCartQuery);
+				$stmt2->execute([$userId, $productId]);
+			}
 		} catch (\PDOException $e) {
 			Log::error("Database error during cart change: {$e->getMessage()}");
 		}

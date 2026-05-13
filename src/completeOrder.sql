@@ -1,7 +1,6 @@
-UPDATE
-	purchase
+UPDATE purchase
 SET
-	completed = true
+	completed = CURRENT_TIMESTAMP
 WHERE
 	userId = ?
-	AND completed = false;
+	AND completed IS NULL;

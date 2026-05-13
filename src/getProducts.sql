@@ -13,7 +13,7 @@ SELECT
 		WHERE
 			userId = ?
 			AND productId = p.id
-			AND completed = false
+			AND completed IS NULL
 	) AS inCart
 FROM
 	product p;

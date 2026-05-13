@@ -1,6 +1,7 @@
-UPDATE purchase
-SET
-	quantity = ?
+SELECT
+	1
+FROM
+	purchase
 WHERE
 	userId = ?
 	AND productId = ?
