@@ -6,16 +6,14 @@ use DateTime;
 
 readonly final class Purchase
 {
-	final public string $id;
-	final public DateTime $created;
-	final public Product $product;
+	final public array $products;
 	final public DateTime $completed;
+	final public int $discount;
 
-	final public function __construct(string $id, DateTime $created, Product $product, DateTime $completed)
+	final public function __construct(array $products, DateTime $completed, int $discount)
 	{
-		$this->id = $id;
-		$this->created = $created;
-		$this->product = $product;
+		$this->products = $products;
 		$this->completed = $completed;
+		$this->discount = $discount;
 	}
 }

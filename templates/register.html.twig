@@ -37,24 +37,24 @@
             }
 
             #register_memberCategory{
-                & option[value="0"] {
+                & option[value="20"] {
                     background: gold;
                     color: black;
                 }
-                & option[value="1"] {
+                & option[value="10"] {
                     background: silver;
                     color: black;
                 }
-                & option[value="2"] {
+                & option[value="0"] {
                     background: sienna;
                 }
             }
 
             /* Show the correct badge when the corresponding option is selected. */
             /* Uses :has if supported by the browser. */
-            div:has(#register_memberCategory option[value="0"]:checked) #gold,
-            div:has(#register_memberCategory option[value="1"]:checked) #silver,
-            div:has(#register_memberCategory option[value="2"]:checked) #bronze {
+            div:has(#register_memberCategory option[value="20"]:checked) #gold,
+            div:has(#register_memberCategory option[value="10"]:checked) #silver,
+            div:has(#register_memberCategory option[value="0"]:checked) #bronze {
                 display: block;
             }
         }

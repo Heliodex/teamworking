@@ -5,7 +5,7 @@ namespace App;
 use DateTime;
 use PDO;
 use PDOException;
-use App\Entity\{AddProduct, Login, Product, Register, User};
+use App\Entity\{AddProduct, Login, Product, Purchase, Register, User};
 
 final class Database
 {
@@ -230,12 +230,12 @@ final class Database
 		}
 	}
 
-	final public static function getCart(string $userId, bool $completed): array
+	final public static function getCart(string $userId): array
 	{
 		try {
 			$getCartQuery = file_get_contents(__DIR__ . "/getCart.sql");
 			$stmt = self::pdo()->prepare($getCartQuery);
-			$stmt->execute([$userId, (int) $completed]);
+			$stmt->execute([$userId]);
 
 			$products = [];
 			while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
@@ -251,6 +251,49 @@ final class Database
 				);
 
 			return $products;
+		} catch (PDOException $e) {
+			Log::error("Database error during cart retrieval: {$e->getMessage()}");
+			return [];
+		}
+	}
+
+	final public static function getOrders(string $userId): array
+	{
+		try {
+			$getCartQuery = file_get_contents(__DIR__ . "/getOrders.sql");
+			$stmt = self::pdo()->prepare($getCartQuery);
+			$stmt->execute([$userId]);
+
+			$orders = [];
+			$lastTime = null;
+			while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+				if ($lastTime === null || $row["completed"] !== $lastTime) {
+					// $orders[] = [
+					// 	"completed" => new DateTime($row["completed"]),
+					// 	"discount" => $row["discount"],
+					// 	"items" => [],
+					// ];
+					$orders[] = new Purchase(
+						[],
+						new DateTime($row["completed"]),
+						$row["discount"],
+					);
+					$lastTime = $row["completed"];
+				}
+
+				$orders[\count($orders) - 1]->products[] = new Product(
+					$row["id"],
+					new DateTime($row["created"]),
+					$row["name"],
+					$row["description"],
+					$row["price"],
+					$row["stock"],
+					$row["quantity"],
+					false,
+				);
+			}
+
+			return $orders;
 		} catch (PDOException $e) {
 			Log::error("Database error during cart retrieval: {$e->getMessage()}");
 			return [];
@@ -315,12 +358,12 @@ final class Database
 		}
 	}
 
-	final public static function completeOrder(string $userId): void
+	final public static function completeOrder(string $userId, int $discount): void
 	{
 		try {
 			$completeOrderQuery = file_get_contents(__DIR__ . "/completeOrder.sql");
 			$stmt = self::pdo()->prepare($completeOrderQuery);
-			$stmt->execute([$userId]);
+			$stmt->execute([$userId, $discount]);
 		} catch (PDOException $e) {
 			Log::error("Database error during order completion: {$e->getMessage()}");
 		}

@@ -15,19 +15,26 @@ final class CheckoutController extends Base
 		if (!$user)
 			return $this->redirectToLogin($request);
 
+		$discount = $user->category->value;
 		if ($request->isMethod("POST")) {
-			Database::completeOrder($user->id);
+			Database::completeOrder($user->id, $discount);
 			return $this->redirectToRoute("orders", [], 303);
 		}
 
-		$cart = Database::getCart($user->id, false);
+		$cart = Database::getCart($user->id);
 
-		$total = 0;
+		$subtotal = 0;
 		foreach ($cart as $item)
-			$total += $item->price * $item->quantity;
+			$subtotal += $item->price * $item->quantity;
+
+		$discounttotal = (int) round($subtotal * (1 - $discount / 100));
+
+		$total = (int) round($discounttotal * 1.2); // VAT
 
 		return $this->finish($request, "checkout.html.twig", [
 			"cart" => $cart,
+			"subtotal" => $subtotal,
+			"discounttotal" => $discounttotal,
 			"total" => $total,
 		]);
 	}

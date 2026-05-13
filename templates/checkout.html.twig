@@ -26,7 +26,9 @@
     {% if cart|length == 0 %}
         <p>Your cart is empty.</p>
     {% else %}
-        <p>Total: £{{ (total / 100)|number_format(2, ".", " ") }}</p>
+        <p>Subtotal: £{{ (subtotal / 100)|number_format(2, ".", " ") }}</p>
+        <p>Discounted: £{{ (discounttotal / 100)|number_format(2, ".", " ") }}</p>
+        <p>Total (including VAT): £{{ (total / 100)|number_format(2, ".", " ") }}</p>
 
         <form method="post">
             <button type="submit">Complete purchase</button>

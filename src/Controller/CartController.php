@@ -22,7 +22,7 @@ final class CartController extends Base
 			Database::setCartQuantity($user->id, $productId, $qty);
 		}
 
-		$cart = Database::getCart($user->id, false);
+		$cart = Database::getCart($user->id);
 
 		$total = 0;
 		foreach ($cart as $item)

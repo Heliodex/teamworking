@@ -15,7 +15,7 @@ final class OrdersController extends Base
 		if (!$user)
 			return $this->redirectToLogin($request);
 
-		$cart = Database::getCart($user->id, true);
+		$cart = Database::getOrders($user->id);
 
 		$total = 0;
 		foreach ($cart as $item)

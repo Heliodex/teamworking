@@ -4,7 +4,7 @@ namespace App;
 
 enum MemberCategory: int
 {
-	case Gold = 0;
-	case Silver = 1;
-	case Bronze = 2;
+	case Bronze = 0;
+	case Silver = 10;
+	case Gold = 20;
 }
