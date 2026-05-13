@@ -3,6 +3,8 @@
 namespace App;
 
 use DateTime;
+use PDO;
+use PDOException;
 use App\Entity\{AddProduct, Login, Product, Register, User};
 
 final class Database
@@ -22,9 +24,9 @@ final class Database
 		return $databaseUrl;
 	}
 
-	private static ?\PDO $pdo = null;
+	private static ?PDO $pdo = null;
 
-	final public static function pdo(): \PDO
+	final public static function pdo(): PDO
 	{
 		if (self::$pdo)
 			return self::$pdo;
@@ -45,11 +47,11 @@ final class Database
 				touch($path);
 		}
 
-		self::$pdo = new \PDO(
+		self::$pdo = new PDO(
 			$databasePath,
 			$_ENV["DATABASE_USER"] ?? null,
 			$_ENV["DATABASE_PASSWORD"] ?? null,
-			[\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]
+			[PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
 		);
 
 		$initQuery = file_get_contents(__DIR__ . "/init.sql");
@@ -61,7 +63,7 @@ final class Database
 	final public static function getRandomNumber(): int
 	{
 		$stmt = self::pdo()->query("SELECT RANDOM() % 100 AS number");
-		$row = $stmt->fetch(\PDO::FETCH_ASSOC);
+		$row = $stmt->fetch(PDO::FETCH_ASSOC);
 		return (int) $row["number"];
 	}
 
@@ -71,7 +73,7 @@ final class Database
 		$stmt = self::pdo()->prepare($getUserBySessionQuery);
 		$stmt->execute([$sess]);
 
-		$row = $stmt->fetch(\PDO::FETCH_ASSOC);
+		$row = $stmt->fetch(PDO::FETCH_ASSOC);
 		if (!$row)
 			return null;
 
@@ -97,7 +99,7 @@ final class Database
 		$stmt = self::pdo()->prepare($createSessionQuery);
 		$stmt->execute([$userId]);
 
-		$row = $stmt->fetch(\PDO::FETCH_ASSOC);
+		$row = $stmt->fetch(PDO::FETCH_ASSOC);
 		return $row["id"];
 	}
 
@@ -113,7 +115,7 @@ final class Database
 		$stmt = self::pdo()->prepare($getUserByEmailQuery);
 		$stmt->execute([$email]);
 
-		$row = $stmt->fetch(\PDO::FETCH_ASSOC);
+		$row = $stmt->fetch(PDO::FETCH_ASSOC);
 		if (!$row)
 			return null;
 
@@ -141,7 +143,7 @@ final class Database
 			$stmt = self::pdo()->prepare($getUserByEmailQuery);
 			$stmt->execute([$login->email]);
 
-			$row = $stmt->fetch(\PDO::FETCH_ASSOC);
+			$row = $stmt->fetch(PDO::FETCH_ASSOC);
 			if (!$row)
 				return null;
 
@@ -149,7 +151,7 @@ final class Database
 				return null;
 
 			return self::createSession($row["id"]);
-		} catch (\PDOException $e) {
+		} catch (PDOException $e) {
 			Log::error("Database error during login: {$e->getMessage()}");
 			return null;
 		}
@@ -173,12 +175,12 @@ final class Database
 				password_hash($register->password, PASSWORD_ARGON2ID),
 			]);
 
-			$row = $stmt->fetch(\PDO::FETCH_ASSOC);
+			$row = $stmt->fetch(PDO::FETCH_ASSOC);
 			if (!$row)
 				return null;
 
 			return self::createSession($row["id"]);
-		} catch (\PDOException $e) {
+		} catch (PDOException $e) {
 			Log::error("Database error during registration: {$e->getMessage()}");
 			return null;
 		}
@@ -195,7 +197,7 @@ final class Database
 			]);
 
 			return true;
-		} catch (\PDOException $e) {
+		} catch (PDOException $e) {
 			Log::error("Database error during password update: {$e->getMessage()}");
 			return false;
 		}
@@ -209,7 +211,7 @@ final class Database
 			$stmt->execute([$userId]);
 
 			$products = [];
-			while ($row = $stmt->fetch(\PDO::FETCH_ASSOC))
+			while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
 				$products[] = new Product(
 					$row["id"],
 					new DateTime($row["created"]),
@@ -222,7 +224,7 @@ final class Database
 				);
 
 			return $products;
-		} catch (\PDOException $e) {
+		} catch (PDOException $e) {
 			Log::error("Database error during product retrieval: {$e->getMessage()}");
 			return [];
 		}
@@ -236,7 +238,7 @@ final class Database
 			$stmt->execute([$userId, (int) $completed]);
 
 			$products = [];
-			while ($row = $stmt->fetch(\PDO::FETCH_ASSOC))
+			while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
 				$products[] = new Product(
 					$row["id"],
 					new DateTime($row["created"]),
@@ -249,7 +251,7 @@ final class Database
 				);
 
 			return $products;
-		} catch (\PDOException $e) {
+		} catch (PDOException $e) {
 			Log::error("Database error during cart retrieval: {$e->getMessage()}");
 			return [];
 		}
@@ -262,7 +264,7 @@ final class Database
 			$stmt = self::pdo()->prepare($inCartQuery);
 			$stmt->execute([$userId, $productId]);
 
-			$inCart = $stmt->fetch(\PDO::FETCH_ASSOC) !== false;
+			$inCart = $stmt->fetch(PDO::FETCH_ASSOC) !== false;
 
 			if ($add && !$inCart) {
 				$addToCartQuery = file_get_contents(__DIR__ . "/addToCart.sql");
@@ -273,7 +275,7 @@ final class Database
 				$stmt2 = self::pdo()->prepare($removeFromCartQuery);
 				$stmt2->execute([$userId, $productId]);
 			}
-		} catch (\PDOException $e) {
+		} catch (PDOException $e) {
 			Log::error("Database error during cart change: {$e->getMessage()}");
 		}
 	}
@@ -293,7 +295,7 @@ final class Database
 			$stockStmt = self::pdo()->prepare($getProductStockQuery);
 			$stockStmt->execute([$productId]);
 
-			$productRow = $stockStmt->fetch(\PDO::FETCH_ASSOC);
+			$productRow = $stockStmt->fetch(PDO::FETCH_ASSOC);
 			if (!$productRow) {
 				Log::error("Product not found when setting cart quantity: {$productId}");
 				return;
@@ -308,7 +310,7 @@ final class Database
 			$updateCartQuery = file_get_contents(__DIR__ . "/updateCart.sql");
 			$stmt = self::pdo()->prepare($updateCartQuery);
 			$stmt->execute([$finalQty, $userId, $productId]);
-		} catch (\PDOException $e) {
+		} catch (PDOException $e) {
 			Log::error("Database error during cart quantity change: {$e->getMessage()}");
 		}
 	}
@@ -319,7 +321,7 @@ final class Database
 			$completeOrderQuery = file_get_contents(__DIR__ . "/completeOrder.sql");
 			$stmt = self::pdo()->prepare($completeOrderQuery);
 			$stmt->execute([$userId]);
-		} catch (\PDOException $e) {
+		} catch (PDOException $e) {
 			Log::error("Database error during order completion: {$e->getMessage()}");
 		}
 	}
@@ -335,7 +337,7 @@ final class Database
 				$addProduct->price,
 				$addProduct->stock
 			]);
-		} catch (\PDOException $e) {
+		} catch (PDOException $e) {
 			Log::error("Database error during product addition: {$e->getMessage()}");
 		}
 	}
