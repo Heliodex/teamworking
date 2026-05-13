@@ -361,10 +361,22 @@ final class Database
 	final public static function completeOrder(string $userId, int $discount): void
 	{
 		try {
+			$deductStockQuery = file_get_contents(__DIR__ . "/deductStock.sql");
 			$completeOrderQuery = file_get_contents(__DIR__ . "/completeOrder.sql");
-			$stmt = self::pdo()->prepare($completeOrderQuery);
-			$stmt->execute([$userId, $discount]);
+
+			self::pdo()->beginTransaction();
+
+			$deductStockStmt = self::pdo()->prepare($deductStockQuery);
+			$deductStockStmt->execute([$userId]);
+
+			$completeOrderStmt = self::pdo()->prepare($completeOrderQuery);
+			$completeOrderStmt->execute([$discount, $userId]);
+
+			self::pdo()->commit();
 		} catch (PDOException $e) {
+			if (self::pdo()->inTransaction())
+				self::pdo()->rollBack();
+
 			Log::error("Database error during order completion: {$e->getMessage()}");
 		}
 	}

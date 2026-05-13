@@ -1,6 +1,7 @@
 UPDATE purchase
 SET
-	completed = CURRENT_TIMESTAMP
+	completed = current_timestamp,
+	discount = ?
 WHERE
 	userId = ?
 	AND completed IS NULL;
