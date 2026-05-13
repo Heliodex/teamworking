@@ -2,31 +2,36 @@
 
 namespace App\Tests\Controller;
 
-use App\{Database, Entity\Register, MemberCategory};
+use App\{Database, MemberCategory};
+use App\Entity\{Register, User};
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 final class LoggedInTest extends WebTestCase
 {
+	private static function registerUser(): ?User
+	{
+		$details = new Register();
+		$details->forename = "test";
+		$details->surname = "test";
+		$details->street = "test";
+		$details->town = "test";
+		$details->postcode = "test";
+		$details->memberCategory = MemberCategory::Bronze;
+		$details->email = "testuser@example.com";
+		$details->password = "testpassword";
+
+		Database::registerUser($details);
+		// Re-fetch to ensure we have a fresh instance
+		return Database::checkUser("testuser@example.com", "testpassword");
+	}
+
 	private function logIn(KernelBrowser $client): void
 	{
 		// Create test user if it doesn't exist
 		$testUser = Database::checkUser("testuser@example.com", "testpassword");
-		if (!$testUser) {
-			$details = new Register();
-			$details->forename = "test";
-			$details->surname = "test";
-			$details->street = "test";
-			$details->town = "test";
-			$details->postcode = "test";
-			$details->memberCategory = MemberCategory::Bronze;
-			$details->email = "testuser@example.com";
-			$details->password = "testpassword";
-
-			Database::registerUser($details);
-			// Re-fetch to ensure we have a fresh instance
-			$testUser = Database::checkUser("testuser@example.com", "testpassword");
-		}
+		if (!$testUser)
+			$testUser = self::registerUser();
 
 		// find form and submit with test user credentials
 		$crawler = $client->request("GET", "/login");
@@ -89,6 +94,22 @@ final class LoggedInTest extends WebTestCase
 		$this->assertResponseIsSuccessful();
 	}
 
+	public function testOrders(): void
+	{
+		$client = self::createClient();
+		$this->logIn($client);
+		$client->request("GET", "/orders");
+		$this->assertResponseIsSuccessful();
+	}
+
+	public function testCheckout(): void
+	{
+		$client = self::createClient();
+		$this->logIn($client);
+		$client->request("GET", "/checkout");
+		$this->assertResponseIsSuccessful();
+	}
+
 	public function testProfile(): void
 	{
 		$client = self::createClient();
@@ -107,5 +128,13 @@ final class LoggedInTest extends WebTestCase
 		$this->assertResponseRedirects("/login", 303);
 		$client->followRedirect();
 		$this->assertResponseIsSuccessful();
+	}
+
+	public function test404(): void
+	{
+		$client = self::createClient();
+		$this->logIn($client);
+		$client->request("GET", "/nonexistentpage");
+		$this->assertResponseStatusCodeSame(404);
 	}
 }
