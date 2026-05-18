@@ -14,24 +14,44 @@
                     <h2>{{ product.name }}</h2>
                     <p>{{ product.description }}</p>
 
-					<img src="{{ asset('product/' ~ product.id) }}" alt="{{ product.name }} image">
-
-                    <data value="{{ product.price }}">Price: £{{ product.price / 100 }}</data>
-                    <data value="{{ product.stock }}">Stock: {{ product.stock }}</data>
+                    <img src="{{ asset('product/' ~ product.id) }}" alt="{{ product.name }} image">
                 </div>
 
-                <form method="post">
-                    <input type="hidden" name="productId" value="{{ product.id }}">
+                <div class="details">
+                    <form method="post">
+                        <input type="hidden" name="productId" value="{{ product.id }}">
 
-                    {% if product.inCart %}
-                        <input type="hidden" name="action" value="remove">
-                        <button type="submit">Remove from cart</button>
-                    {% else %}
-                        <input type="hidden" name="action" value="add">
-                        <button type="submit">Add to cart</button>
-                    {% endif %}
-                </form>
+                        {% if product.inCart %}
+                            <input type="hidden" name="action" value="remove">
+                            <button type="submit">Remove from cart</button>
+                        {% else %}
+                            <input type="hidden" name="action" value="add">
+                            <button type="submit">Add to cart</button>
+                        {% endif %}
+                    </form>
+
+                    <div>
+						{# misaligned with other products based on add/remove button size, whatever #}
+                        <data value="{{ product.price }}">Price: £{{ (product.price / 100)|number_format(2, ".", " ") }}</data>
+                        <data value="{{ product.stock }}">Stock: {{ product.stock }}</data>
+                    </div>
+                </div>
+
             </article>
         {% endfor %}
     </div>
+
+    <style>
+        @scope {
+            img {
+                max-width: 15rem;
+            }
+
+            .details {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
 {% endblock %}
