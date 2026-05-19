@@ -309,14 +309,20 @@ final class Database
 
 			$inCart = $stmt->fetch(PDO::FETCH_ASSOC) !== false;
 
-			if ($add && !$inCart) {
+			$checkStockQuery = file_get_contents(__DIR__ . "/checkStock.sql");
+			$stmt2 = self::pdo()->prepare($checkStockQuery);
+			$stmt2->execute([$productId]);
+			$row = $stmt2->fetch(PDO::FETCH_ASSOC);
+			$stock = $row ? (int) $row["stock"] : 0;
+
+			if ($add && !$inCart && $stock > 0) {
 				$addToCartQuery = file_get_contents(__DIR__ . "/addToCart.sql");
-				$stmt2 = self::pdo()->prepare($addToCartQuery);
-				$stmt2->execute([$userId, $productId]);
+				$stmt3 = self::pdo()->prepare($addToCartQuery);
+				$stmt3->execute([$userId, $productId]);
 			} else if (!$add && $inCart) {
 				$removeFromCartQuery = file_get_contents(__DIR__ . "/removeFromCart.sql");
-				$stmt2 = self::pdo()->prepare($removeFromCartQuery);
-				$stmt2->execute([$userId, $productId]);
+				$stmt3 = self::pdo()->prepare($removeFromCartQuery);
+				$stmt3->execute([$userId, $productId]);
 			}
 		} catch (PDOException $e) {
 			Log::error("Database error during cart change: {$e->getMessage()}");
