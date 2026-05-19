@@ -4,16 +4,25 @@ namespace App\Entity;
 
 use DateTime;
 
-readonly final class Purchase
+final class Purchase
 {
 	final public array $products;
-	final public DateTime $completed;
-	final public int $discount;
+	final public readonly DateTime $completed;
+	final public readonly int $discount;
 
 	final public function __construct(array $products, DateTime $completed, int $discount)
 	{
 		$this->products = $products;
 		$this->completed = $completed;
 		$this->discount = $discount;
+	}
+
+	final public function price(): int
+	{
+		$total = 0;
+		foreach ($this->products as $product)
+			$total += $product->price * $product->quantity;
+
+		return $total;
 	}
 }

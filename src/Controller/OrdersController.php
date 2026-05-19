@@ -15,15 +15,10 @@ final class OrdersController extends Base
 		if (!$user)
 			return $this->redirectToLogin($request);
 
-		$cart = Database::getOrders($user->id);
-
-		$total = 0;
-		foreach ($cart as $item)
-			$total += $item->price * $item->quantity;
+		$orders = Database::getOrders($user->id);
 
 		return $this->finish($request, "orders.html.twig", [
-			"cart" => $cart,
-			"total" => $total,
+			"orders" => $orders,
 		]);
 	}
 }

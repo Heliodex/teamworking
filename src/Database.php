@@ -295,7 +295,7 @@ final class Database
 
 			return $orders;
 		} catch (PDOException $e) {
-			Log::error("Database error during cart retrieval: {$e->getMessage()}");
+			Log::error("Database error during order retrieval: {$e->getMessage()}");
 			return [];
 		}
 	}

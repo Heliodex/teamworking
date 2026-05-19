@@ -11,25 +11,28 @@
         <a href="{{ path('cart') }}">View current order</a>
     </div>
 
-    <div class="products">
-        {% for product in cart %}
-            <article class="product">
-                <div class="info">
-                    <h2>{{ product.name }}</h2>
-                    <p>{{ product.description }}</p>
-                    <data value="{{ product.price }}">Price: £{{ (product.price / 100)|number_format(2, ".", " ") }}</data>
-                </div>
+    {% for order in orders %}
+        <p>Completed at {{ order.completed|date('d M Y H:i:s') }}</p>
+        <div class="products">
+            {% for product in order.products %}
+                <article class="product">
+                    <div class="info">
+                        <h2>{{ product.name }}</h2>
+                        <p>{{ product.description }}</p>
+                        <data value="{{ product.price }}">Price: £{{ (product.price / 100)|number_format(2, ".", " ") }}</data>
+                    </div>
 
-                <data value="{{ product.quantity }}">Quantity: {{ product.quantity }}</data>
-            </article>
-        {% endfor %}
-    </div>
+                    <data value="{{ product.quantity }}">Quantity: {{ product.quantity }}</data>
+                </article>
+            {% endfor %}
+        </div>
 
-    <hr>
+        <hr>
 
-    {% if cart|length == 0 %}
+        <p style="padding-bottom: 2rem">Total: £{{ (order.price() / 100)|number_format(2, ".", " ") }}</p>
+    {% endfor %}
+
+    {% if orders|length == 0 %}
         <p>You have no orders.</p>
-    {% else %}
-        <p>Total: £{{ (total / 100)|number_format(2, ".", " ") }}</p>
     {% endif %}
 {% endblock %}
